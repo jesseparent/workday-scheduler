@@ -24,7 +24,7 @@ In this project, a schedule is shown for the current day's hourly tasks. The tas
 - Moment.js used to display current date at top of HTML
 - Moment.js used to determine if each row was before, during, or after the current hour so the background color could be displayed correctly
 - A timeout was used to determine how much time was left before the top of the next hour so the schedule colors could be adjusted
-- A time interval was used after the initial timeout to adjust colors on an hourlys basis afterwards
+- A time interval was used after the initial timeout to adjust colors on an hourly basis afterwards
 - jQuery was used to determine the textarea to save that corresponded with the save button
 
 ## Deployed Application
