@@ -5,15 +5,15 @@ let today = moment();
 let schedule = JSON.parse(localStorage.getItem('schedule')) // Check local storage for values
   // If there is nothing in local storage, create an empty schedule
   || [
-    { "9AM": "" },
-    { "10AM": "" },
-    { "11AM": "" },
-    { "12PM": "" },
-    { "1PM": "" },
-    { "2PM": "" },
-    { "3PM": "" },
-    { "4PM": "" },
-    { "5PM": "" }
+    { timeslot : "9AM", task : "" },
+    { timeslot : "10AM", task : "" },
+    { timeslot : "11AM", task : "" },
+    { timeslot : "12PM", task : "" },
+    { timeslot : "1PM", task : "" },
+    { timeslot : "2PM", task : "" },
+    { timeslot : "3PM", task : "" },
+    { timeslot : "4PM", task : "" },
+    { timeslot : "5PM", task : "" }
   ];
 
 // Timers to check if colors on schedule need to be updated due to hour change
@@ -29,14 +29,14 @@ let renderSchedule = function () {
   let scheduleContainer = $('.container');
 
   for (let i = 0; i < schedule.length; i++) {
-    let currentKey = Object.keys(schedule[i])[0];
-    let currentValue = schedule[i][currentKey];
+    let currentTimeslot = schedule[i].timeslot;
+    let currentTask = schedule[i].task;
     let rowText = ''; // Set up row text
 
     // Create row for this time slot
     rowText += '<div class="row time-block">\n';
-    rowText += '  <div class="col-1 hour m-0 p-0">' + currentKey + '</div>\n';
-    rowText += '  <div class="col-10 description m-0 p-0"><textarea id="' + currentKey + '" class="w-100 h-100">' + currentValue + '</textarea></div>\n';
+    rowText += '  <div class="col-1 hour m-0 p-0">' + currentTimeslot + '</div>\n';
+    rowText += '  <div class="col-10 description m-0 p-0"><textarea id="' + currentTimeslot + '" class="w-100 h-100">' + currentTask + '</textarea></div>\n';
     rowText += '  <div class="col-1 m-0 p-0"><button class="saveBtn w-100 h-100"><i class="fas fa-save"></i></button></div>\n';
     rowText += '</div>\n';
 
@@ -53,7 +53,7 @@ let changeColors = function () {
   today = moment();
   
   for (let i = 0; i < schedule.length; i++) {
-    let timeToCheck = Object.keys(schedule[i])[0]; // Get the time of the time slot to evaluate
+    let timeToCheck = schedule[i].timeslot; // Get the time of the time slot to evaluate
     let textEntry = $("#" + timeToCheck); // Find the class of the textarea to change
 
     let currentHour = moment(today.format("hA"), "hA"); // The current hour on the user's clock and store as string
@@ -94,7 +94,7 @@ renderSchedule();
 // Save the entry on the current time to in memory and local storage
 $(".saveBtn").click(function () {
   let key = $(this).closest(".time-block").children(".hour").text();
-  let value = $(this).closest(".time-block").children(".description").children().val();
+  let value = $("#" + key).val();
   
 console.log(key + " : " + value);
 console.log($(this).closest(".time-block"));
@@ -103,11 +103,9 @@ console.log($(this).closest(".time-block").children(".description"));
 
   // Find and change the current time entry in the array
   for (let i = 0; i < schedule.length; i++) {
-    let currentKey = Object.keys(schedule[i])[0];
-    console.log("CurrentKey: "+ currentKey + " === Key: " + key);
+    let currentKey = schedule[i].timeslot;
     if (currentKey === key) {
-      schedule[i][currentKey] = value;
-      console.log("Set  "+ schedule[i][currentKey] + " = Value: " + value);
+      schedule[i].task = value;
       break;
     }
   }
