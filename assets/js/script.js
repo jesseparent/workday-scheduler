@@ -95,11 +95,6 @@ renderSchedule();
 $(".saveBtn").click(function () {
   let key = $(this).closest(".time-block").children(".hour").text();
   let value = $("#" + key).val();
-  
-console.log(key + " : " + value);
-console.log($(this).closest(".time-block"));
-console.log($(this).closest(".time-block").children(".hour"));
-console.log($(this).closest(".time-block").children(".description"));
 
   // Find and change the current time entry in the array
   for (let i = 0; i < schedule.length; i++) {
