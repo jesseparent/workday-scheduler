@@ -3,7 +3,8 @@ let today = moment("12PM", "hA"); // for testing
 //let today = moment();
 
 // Time Slots for Each row in calendar
-let timeSlots = [
+let schedule = JSON.parse(localStorage.getItem('schedule')) 
+  || [
   { "9AM": "" },
   { "10AM": "" },
   { "11AM": "" },
@@ -18,10 +19,21 @@ let timeSlots = [
 // Format Date to Day-Of-Week, Month-Name Day-Suffixed (e.g. "Thursday, January 7th") and display it at top of page
 $('#currentDay').text(today.format("dddd, MMMM Do"));
 
+// Render the schedule with stored tasks
+let renderSchedule = function() {
+  for (let i = 0; i < schedule.length; i++) {
+    let currentKey = Object.keys(schedule[i])[0]; // Get the time of the time slot to evaluate
+    let textEntry = $("#" + currentKey); // Find the class of the textarea to change
+    textEntry.val(schedule[i][currentKey]);
+  }
+
+  changeColors();
+};
+
 // Change the colors of the timeslots in the Workday schedule
 let changeColors = function () {
-  for (let i = 0; i < timeSlots.length; i++) {
-    let timeToCheck = Object.keys(timeSlots[i])[0]; // Get the time of the time slot to evaluate
+  for (let i = 0; i < schedule.length; i++) {
+    let timeToCheck = Object.keys(schedule[i])[0]; // Get the time of the time slot to evaluate
     let textEntry = $("#" + timeToCheck); // Find the class of the textarea to change
 
     let currentHour = moment(today, "hA"); // The current hour on the user's clock
@@ -40,29 +52,27 @@ let changeColors = function () {
     else {
       textEntry.addClass("present"); // This is the current time slot 
     }
-    console.log($("time" + timeToCheck));
   }
 };
 
+$(".saveBtn").click(function()
+{
+  let key = $(this).attr("data-txt-id");
+  let value = $(this).closest(".time-block").children(".description").children().val();
 
-changeColors();
+  for (let i = 0; i < schedule.length; i++) {
+    let currentKey = Object.keys(schedule[i])[0];
+    if (currentKey === key)
+    {
+      schedule[i][currentKey] = value;
+      break;
+    }
+  }
 
-// Test Functions to jump around time
-function goForward() {
-  today = moment("2PM", "hA");
-  changeColors();
-}
+  localStorage.setItem('schedule', JSON.stringify(schedule));
+});
 
-function goBack() {
-  today = moment("10AM", "hA");
-  changeColors();
-}
-
-setTimeout(goForward, 2000);
-
-
-setTimeout(goBack, 5000);
-
+renderSchedule();
 
 
 
