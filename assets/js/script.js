@@ -22,9 +22,6 @@ let updateInterval;
 
 // Render the schedule with stored tasks
 let renderSchedule = function () {
-  // Format Date to Day-Of-Week, Month-Name Day-Suffixed (e.g. "Thursday, January 7th") and display it at top of HTML page
-  $('#currentDay').text(today.format("dddd, MMMM Do"));
-
   // Write out the schedule
   let scheduleContainer = $('.container');
 
@@ -51,6 +48,9 @@ let renderSchedule = function () {
 let changeColors = function () {
   // Load time right now to see if we need to change colors on backgrounds
   today = moment();
+  
+  // Format Date to Day-Of-Week, Month-Name Day-Suffixed (e.g. "Thursday, January 7th") and display it at top of HTML page
+  $('#currentDay').text(today.format("dddd, MMMM Do"));
   
   for (let i = 0; i < schedule.length; i++) {
     let timeToCheck = schedule[i].timeslot; // Get the time of the time slot to evaluate
