@@ -16,6 +16,9 @@ let schedule = JSON.parse(localStorage.getItem('schedule'))
   { "5PM": "" }
 ];
 
+// Timer to check if colors on schedule need to be updated due to hour change
+let updateInterval;
+
 // Format Date to Day-Of-Week, Month-Name Day-Suffixed (e.g. "Thursday, January 7th") and display it at top of page
 $('#currentDay').text(today.format("dddd, MMMM Do"));
 
@@ -24,14 +27,16 @@ let renderSchedule = function() {
   for (let i = 0; i < schedule.length; i++) {
     let currentKey = Object.keys(schedule[i])[0]; // Get the time of the time slot to evaluate
     let textEntry = $("#" + currentKey); // Find the class of the textarea to change
-    textEntry.val(schedule[i][currentKey]);
+    textEntry.val(schedule[i][currentKey]); // Change the text entry to match the event for that time
   }
 
+  // Change the colors of each time slot based on the current time
   changeColors();
 };
 
 // Change the colors of the timeslots in the Workday schedule
 let changeColors = function () {
+  console.log("change colors");
   for (let i = 0; i < schedule.length; i++) {
     let timeToCheck = Object.keys(schedule[i])[0]; // Get the time of the time slot to evaluate
     let textEntry = $("#" + timeToCheck); // Find the class of the textarea to change
@@ -55,11 +60,22 @@ let changeColors = function () {
   }
 };
 
+// After first time gets me close to teh start of the hour, check on an hourly basis if the colors on teh scheduler need to change
+let setupHourlyCheck = function() {
+  changeColors();  // Change the background colors of hourly time slots based on teh current hour
+
+  let anHour = 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
+  
+  updateInterval = setInterval(changeColors, anHour);
+}
+
+// Save the entry on teh current time to in memory and local storage
 $(".saveBtn").click(function()
 {
   let key = $(this).attr("data-txt-id");
   let value = $(this).closest(".time-block").children(".description").children().val();
 
+  // Find and change the current time entry in the array
   for (let i = 0; i < schedule.length; i++) {
     let currentKey = Object.keys(schedule[i])[0];
     if (currentKey === key)
@@ -69,10 +85,16 @@ $(".saveBtn").click(function()
     }
   }
 
+  // Save to localStorage
   localStorage.setItem('schedule', JSON.stringify(schedule));
 });
 
+// Render the schedule
 renderSchedule();
 
+// Set a timer based on how close the next hour is and then set an hourly interval timer
+let timeToNextHour = (60 - moment().format("m") + 1) * 60 * 1000; // Milliseconds to the next hour, plus 1 minute extra to account for overage due to seconds
+
+let initialCheckTimeout = setTimeout(setupHourlyCheck, timeToNextHour);
 
 
