@@ -35,5 +35,5 @@ In this project, a schedule is shown for the current day's hourly tasks. The tas
 ![Image](./screenshot.jpg)
 
 ## Animated Screenshot
-- The animated screenshot of the final work showing all functionality and effect on backround colors during an hour change: 
+- The animated screenshot showing all functionality and effect on backround colors during an hour change: 
 ![Image](./animatedScreenshot.gif)
