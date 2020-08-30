@@ -96,11 +96,18 @@ $(".saveBtn").click(function () {
   let key = $(this).closest(".time-block").children(".hour").text();
   let value = $(this).closest(".time-block").children(".description").children().val();
   
+console.log(key + " : " + value);
+console.log($(this).closest(".time-block"));
+console.log($(this).closest(".time-block").children(".hour"));
+console.log($(this).closest(".time-block").children(".description"));
+
   // Find and change the current time entry in the array
   for (let i = 0; i < schedule.length; i++) {
     let currentKey = Object.keys(schedule[i])[0];
+    console.log("CurrentKey: "+ currentKey + " === Key: " + key);
     if (currentKey === key) {
       schedule[i][currentKey] = value;
+      console.log("Set  "+ schedule[i][currentKey] + " = Value: " + value);
       break;
     }
   }
